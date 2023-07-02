@@ -1,0 +1,667 @@
+---
+title: "Palmer Penguins"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+```{r}
+library("tidyverse")
+library("palmerpenguins")
+```
+```{r}
+head(penguins)
+```
+```{r}
+penguins <- penguins %>%
+  mutate(my_year=factor(.$year,ordered=TRUE))
+```
+```{r}
+#Mean
+penguins %>%
+  group_by(species) %>%
+  summarise(bill_length_mm=mean(bill_length_mm,na.rm=TRUE),
+            bill_depth_mm=mean(bill_depth_mm,na.rm=TRUE),
+            flipper_length_mm=mean(bill_depth_mm,na.rm=TRUE),
+         
+               body_mass_g=mean(body_mass_g,na.rm=TRUE))
+#medians
+penguins %>%
+  group_by(species) %>%
+  summarise(bill_length_mm=median(bill_length_mm,na.rm=TRUE),
+            bill_depth_mm=median(bill_depth_mm,na.rm=TRUE),
+            flipper_length_mm=median(flipper_length_mm,na.rm=TRUE),
+            body_mass_g=median(body_mass_g,na.rm=TRUE))
+
+```
+#Median
+```{r}
+penguins %>%
+  group_by(species) %>%
+  summarise(bill_length_mm=median(bill_length_mm,na.rm=TRUE),
+            bill_depth_mm=median(bill_depth_mm,na.rm=TRUE),
+            flipper_length_mm=median(flipper_length_mm,na.rm=TRUE),
+            body_mass_g=median(body_mass_g,na.rm=TRUE))
+```
+# standard deviation
+```{r}
+penguins %>%
+  group_by(species) %>%
+  summarise(bill_length_mm=sd(bill_length_mm,na.rm=TRUE),
+            bill_depth_mm=sd(bill_depth_mm,na.rm=TRUE),
+            flipper_length_mm=sd(flipper_length_mm,na.rm=TRUE),
+            body_mass_g=sd(body_mass_g,na.rm=TRUE))
+```
+# variance
+```{r}
+penguins %>%
+  group_by(species) %>%
+  summarise(bill_length_mm=var(bill_length_mm,na.rm=TRUE),
+            bill_depth_mm=var(bill_depth_mm,na.rm=TRUE),
+            flipper_length_mm=var(flipper_length_mm,na.rm=TRUE),
+            body_mass_g=var(body_mass_g,na.rm=TRUE))
+```
+# range
+```{r}
+penguins %>%
+  group_by(species) %>%
+  summarise(bill_length_mm=range(bill_length_mm,na.rm=TRUE),
+            bill_depth_mm=range(bill_depth_mm,na.rm=TRUE),
+            flipper_length_mm=range(flipper_length_mm,na.rm=TRUE),
+            body_mass_g=range(body_mass_g,na.rm=TRUE))
+```
+# interquartile range
+```{r}
+penguins %>%
+  group_by(species) %>%
+  summarise(bill_length_mm=IQR(bill_length_mm,na.rm=TRUE),
+            bill_depth_mm=IQR(bill_depth_mm,na.rm=TRUE),
+            flipper_length_mm=IQR(flipper_length_mm,na.rm=TRUE),
+            body_mass_g=IQR(body_mass_g,na.rm=TRUE))
+```
+## DATA VISUALIZATION
+#BARCHARTS
+```{r}
+penguins %>%
+ggplot(aes(species)) +
+geom_bar()
+```
+
+```{r}
+penguins %>%
+  ggplot(aes(island)) +
+  geom_bar()
+
+```
+```{r}
+penguins %>%
+ggplot(aes(sex)) +
+geom_bar()
+```
+```{r}
+penguins %>%
+  ggplot(aes(year)) +
+  geom_bar()
+```
+## frequency table
+```{r}
+penguins %>%
+  group_by(species) %>%
+  summarise(n=n())
+  
+```
+```{r}
+penguins %>%
+  group_by(island) %>%
+  summarise(n=n())
+```
+```{r}
+penguins %>%
+  group_by(sex) %>%
+  summarise(n=n())
+```
+```{r}
+penguins %>%
+  group_by(year) %>%
+  summarise(n=n())
+```
+## visualizing distributions
+# histograms'
+```{r}
+penguins %>%
+  drop_na(bill_length_mm)%>%
+  ggplot(aes(bill_length_mm))+
+  geom_histogram()
+```
+
+```{r}
+penguins %>%
+  drop_na(bill_depth_mm)%>%
+  ggplot(aes(bill_depth_mm))+
+  geom_histogram()
+```
+```{r}
+penguins %>%
+  drop_na(flipper_length_mm)%>%
+  ggplot(aes(flipper_length_mm))+
+  geom_histogram()
+```
+```{r}
+penguins %>%
+  drop_na(body_mass_g)%>%
+  ggplot(aes(body_mass_g))+
+  geom_histogram()
+```
+# desnity plot
+```{r}
+penguins%>%
+  drop_na(bill_length_mm)%>%
+  ggplot(aes(bill_length_mm))+
+  geom_density()
+```
+```{r}
+penguins%>%
+  drop_na(bill_depth_mm)%>%
+  ggplot(aes(bill_depth_mm))+
+  geom_density()
+```
+```{r}
+penguins%>%
+  drop_na(flipper_length_mm)%>%
+  ggplot(aes(flipper_length_mm))+
+  geom_density()
+```
+```{r}
+penguins%>%
+  drop_na(body_mass_g)%>%
+  ggplot(aes(body_mass_g))+
+  geom_density()
+```
+## comparison
+# continoius two variables
+# scatter plot
+```{r}
+penguins %>%
+  drop_na(bill_length_mm,bill_depth_mm) %>%
+  ggplot(aes(x=bill_length_mm,y=bill_depth_mm))+
+  geom_point()
+```
+```{r}
+penguins %>%
+  drop_na(bill_length_mm,bill_depth_mm) %>%
+  ggplot(aes(x=bill_length_mm,y=flipper_length_mm))+
+  geom_point()
+```
+```{r}
+penguins %>%
+  drop_na(bill_length_mm,bill_depth_mm) %>%
+  ggplot(aes(x=bill_length_mm,y=body_mass_g))+
+  geom_point()
+```
+```{r}
+penguins %>%
+  drop_na(bill_length_mm,bill_depth_mm) %>%
+  ggplot(aes(x=bill_depth_mm,y=flipper_length_mm))+
+  geom_point()
+```
+```{r}
+penguins %>%
+  drop_na(bill_length_mm,bill_depth_mm) %>%
+  ggplot(aes(x=bill_depth_mm,y=body_mass_g))+
+  geom_point()
+```
+```{r}
+penguins %>%
+  drop_na(bill_length_mm,bill_depth_mm) %>%
+  ggplot(aes(x=flipper_length_mm,y=body_mass_g))+
+  geom_point()
+```
+```{r}
+penguins %>%
+  drop_na(bill_length_mm,bill_depth_mm) %>%
+  ggplot(aes(x=bill_length_mm,y=bill_depth_mm,colour=species)) +
+  geom_point()
+```
+```{r}
+penguins %>%
+  drop_na(bill_length_mm,bill_depth_mm) %>%
+  ggplot(aes(x=bill_length_mm,y=flipper_length_mm,colour=species)) +
+  geom_point()
+```
+```{r}
+penguins %>%
+  drop_na(bill_length_mm,bill_depth_mm) %>%
+  ggplot(aes(x=bill_length_mm,y=body_mass_g,colour=species)) +
+  geom_point()
+```
+```{r}
+penguins %>%
+  drop_na(bill_length_mm,bill_depth_mm) %>%
+  ggplot(aes(x=bill_depth_mm,y=flipper_length_mm,colour=species)) +
+  geom_point()
+```
+```{r}
+penguins %>%
+  drop_na(bill_length_mm,bill_depth_mm) %>%
+  ggplot(aes(x=bill_depth_mm,y=body_mass_g,colour=species)) +
+  geom_point()
+```
+```{r}
+penguins %>%
+  drop_na(bill_length_mm,bill_depth_mm) %>%
+  ggplot(aes(x=flipper_length_mm,y=body_mass_g,colour=species)) +
+  geom_point()
+```
+# scatter plot with smooth trendline
+```{r}
+penguins %>%
+  drop_na(bill_length_mm,bill_depth_mm) %>%
+  ggplot(aes(x=bill_length_mm,y=bill_depth_mm)) +
+  geom_point() +
+  geom_smooth()
+```
+```{r}
+penguins %>%
+  drop_na(bill_length_mm,bill_depth_mm) %>%
+  ggplot(aes(x=bill_length_mm,y=flipper_length_mm)) +
+  geom_point() +
+  geom_smooth()
+```
+```{r}
+penguins %>%
+  drop_na(bill_length_mm,bill_depth_mm) %>%
+  ggplot(aes(x=bill_length_mm,y=body_mass_g)) +
+  geom_point() +
+  geom_smooth()
+```
+```{r}
+penguins %>%
+  drop_na(bill_length_mm,bill_depth_mm) %>%
+  ggplot(aes(x=bill_depth_mm,y=flipper_length_mm)) +
+  geom_point() +
+  geom_smooth()
+```
+```{r}
+penguins %>%
+  drop_na(bill_length_mm,bill_depth_mm) %>%
+  ggplot(aes(x=bill_depth_mm,y=body_mass_g)) +
+  geom_point() +
+  geom_smooth()
+```
+```{r}
+penguins %>%
+  drop_na(bill_length_mm,bill_depth_mm) %>%
+  ggplot(aes(x=flipper_length_mm,y=body_mass_g)) +
+  geom_point() +
+  geom_smooth()
+
+```
+```{r}
+penguins %>%
+  drop_na(bill_length_mm,bill_depth_mm) %>%
+  ggplot(aes(x=bill_length_mm,y=bill_depth_mm,colour=species)) +
+  geom_point() +
+  geom_smooth()
+```
+```{r}
+penguins %>%
+  drop_na(bill_length_mm,bill_depth_mm) %>%
+  ggplot(aes(x=bill_length_mm,y=flipper_length_mm,colour=species)) +
+  geom_point() +
+  geom_smooth()
+```
+```{r}
+penguins %>%
+  drop_na(bill_length_mm,bill_depth_mm) %>%
+  ggplot(aes(x=bill_length_mm,y=body_mass_g,colour=species)) +
+  geom_point() +
+  geom_smooth()
+```
+```{r}
+penguins %>%
+  drop_na(bill_length_mm,bill_depth_mm) %>%
+  ggplot(aes(x=bill_depth_mm,y=flipper_length_mm,colour=species)) +
+  geom_point() +
+  geom_smooth()
+```
+```{r}
+penguins %>%
+  drop_na(bill_length_mm,bill_depth_mm) %>%
+  ggplot(aes(x=bill_depth_mm,y=body_mass_g,colour=species)) +
+  geom_point() +
+  geom_smooth()
+```
+```{r}
+penguins %>%
+  drop_na(bill_length_mm,bill_depth_mm) %>%
+  ggplot(aes(x=flipper_length_mm,y=body_mass_g,colour=species)) +
+  geom_point() +
+  geom_smooth()
+```
+```{r}
+penguins %>%
+  drop_na(bill_length_mm,bill_depth_mm) %>%
+  ggplot(aes(x=bill_length_mm,y=bill_depth_mm)) +
+  geom_point() +
+  geom_smooth(method=lm)
+```
+```{r}
+penguins %>%
+  drop_na(bill_length_mm,bill_depth_mm) %>%
+  ggplot(aes(x=bill_length_mm,y=flipper_length_mm)) +
+  geom_point() +
+  geom_smooth(method=lm)
+```
+```{r}
+penguins %>%
+  drop_na(bill_length_mm,bill_depth_mm) %>%
+  ggplot(aes(x=bill_length_mm,y=body_mass_g)) +
+  geom_point() +
+  geom_smooth(method=lm)
+```
+```{r}
+penguins %>%
+  drop_na(bill_length_mm,bill_depth_mm) %>%
+  ggplot(aes(x=bill_depth_mm,y=flipper_length_mm)) +
+  geom_point() +
+  geom_smooth(method=lm)
+```
+```{r}
+penguins %>%
+  drop_na(bill_length_mm,bill_depth_mm) %>%
+  ggplot(aes(x=bill_depth_mm,y=body_mass_g)) +
+  geom_point() +
+  geom_smooth(method=lm)
+
+```
+
+
+```{r}
+penguins %>%
+  drop_na(bill_length_mm,bill_depth_mm) %>%
+  ggplot(aes(x=flipper_length_mm,y=body_mass_g)) +
+  geom_point() +
+  geom_smooth(method=lm)
+
+```
+```{r}
+penguins %>%
+  drop_na(bill_length_mm,bill_depth_mm) %>%
+  ggplot(aes(x=bill_length_mm,y=bill_depth_mm,colour=species)) +
+  geom_point() +
+  geom_smooth(method=lm)
+```
+```{r}
+penguins %>%
+  drop_na(bill_length_mm,bill_depth_mm) %>%
+  ggplot(aes(x=bill_length_mm,y=flipper_length_mm,colour=species)) +
+  geom_point() +
+  geom_smooth(method=lm)
+```
+```{r}
+penguins %>%
+  drop_na(bill_length_mm,bill_depth_mm) %>%
+  ggplot(aes(x=bill_length_mm,y=body_mass_g,colour=species)) +
+  geom_point() +
+  geom_smooth(method=lm)
+```
+```{r}
+penguins %>%
+  drop_na(bill_length_mm,bill_depth_mm) %>%
+  ggplot(aes(x=bill_depth_mm,y=flipper_length_mm,colour=species)) +
+  geom_point() +
+  geom_smooth(method=lm)
+```
+```{r}
+penguins %>%
+  drop_na(bill_length_mm,bill_depth_mm) %>%
+  ggplot(aes(x=bill_depth_mm,y=flipper_length_mm,colour=species)) +
+  geom_point() +
+  geom_smooth(method=lm)
+```
+```{r}
+penguins %>%
+  drop_na(bill_length_mm,bill_depth_mm) %>%
+  ggplot(aes(x=bill_depth_mm,y=body_mass_g,colour=species)) +
+  geom_point() +
+  geom_smooth(method=lm)
+```
+```{r}
+penguins %>%
+  drop_na(bill_length_mm,bill_depth_mm) %>%
+  ggplot(aes(x=flipper_length_mm,y=body_mass_g,colour=species)) +
+  geom_point() +
+  geom_smooth(method=lm)
+```
+```{r}
+penguins %>%
+  drop_na(bill_length_mm,bill_depth_mm) %>%
+  ggplot(aes(x=bill_length_mm,y=bill_depth_mm)) +
+  geom_density_2d()
+```
+```{r}
+penguins %>%
+  drop_na(bill_length_mm,bill_depth_mm) %>%
+  ggplot(aes(x=bill_length_mm,y=flipper_length_mm)) +
+  geom_density_2d()
+```
+```{r}
+penguins %>%
+  drop_na(bill_length_mm,bill_depth_mm) %>%
+  ggplot(aes(x=bill_length_mm,y=body_mass_g)) +
+  geom_density_2d()
+```
+```{r}
+penguins %>%
+  drop_na(bill_length_mm,bill_depth_mm) %>%
+  ggplot(aes(x=bill_depth_mm,y=flipper_length_mm)) +
+  geom_density_2d()
+```
+```{r}
+penguins %>%
+  drop_na(bill_length_mm,bill_depth_mm) %>%
+  ggplot(aes(x=bill_depth_mm,y=body_mass_g)) +
+  geom_density_2d()
+```
+```{r}
+penguins %>%
+  drop_na(bill_length_mm,bill_depth_mm) %>%
+  ggplot(aes(x=flipper_length_mm,y=body_mass_g)) +
+  geom_density_2d()
+```
+```{r}
+penguins %>%
+  drop_na(bill_length_mm,bill_depth_mm) %>%
+  ggplot(aes(x=bill_length_mm,y=bill_depth_mm,colour=species)) +
+  geom_density_2d()
+```
+```{r}
+penguins %>%
+  drop_na(bill_length_mm,bill_depth_mm) %>%
+  ggplot(aes(x=bill_length_mm,y=flipper_length_mm,colour=species)) +
+  geom_density_2d()
+```
+
+
+```{r}
+penguins %>%
+  drop_na(bill_length_mm,bill_depth_mm) %>%
+  ggplot(aes(x=bill_length_mm,y=body_mass_g,colour=species)) +
+  geom_density_2d()
+```
+```{r}
+penguins %>%
+  drop_na(bill_length_mm,bill_depth_mm) %>%
+  ggplot(aes(x=bill_depth_mm,y=flipper_length_mm,colour=species)) +
+  geom_density_2d()
+```
+```{r}
+penguins %>%
+  drop_na(bill_length_mm,bill_depth_mm) %>%
+  ggplot(aes(x=bill_depth_mm,y=body_mass_g,colour=species)) +
+  geom_density_2d()
+```
+```{r}
+penguins %>%
+  drop_na(bill_length_mm,bill_depth_mm) %>%
+  ggplot(aes(x=flipper_length_mm,y=body_mass_g,colour=species)) +
+  geom_density_2d()
+```
+```{r}
+install.packages(GGally)
+library(GGally)
+```
+```{r}
+penguins %>%
+  drop_na() %>%
+  ggpairs()
+
+```
+```{r}
+penguins%>%
+  ggcorr(label=TRUE)
+```
+```{r}
+penguins%>%
+  drop_na(bill_length_mm) %>%
+  ggplot(aes(bill_length_mm))+
+  geom_histogram() +
+  facet_grid(cols=vars(species))
+```
+```{r}
+penguins%>%
+  drop_na(bill_depth_mm) %>%
+  ggplot(aes(bill_depth_mm))+
+  geom_histogram() +
+  facet_grid(cols=vars(species))
+```
+```{r}
+penguins%>%
+  drop_na(flipper_length_mm) %>%
+  ggplot(aes(flipper_length_mm))+
+  geom_histogram() +
+  facet_grid(cols=vars(species))
+```
+```{r}
+penguins%>%
+  drop_na(bill_depth_mm) %>%
+  ggplot(aes(body_mass_g))+
+  geom_histogram() +
+  facet_grid(cols=vars(species))
+```
+```{r}
+penguins %>%
+  drop_na(bill_length_mm) %>%
+  ggplot(aes(x=bill_length_mm,fill=species)) +
+  geom_histogram(alpha=0.2,position="identity")
+```
+```{r}
+penguins %>%
+  drop_na(bill_depth_mm) %>%
+  ggplot(aes(x=bill_length_mm,fill=species)) +
+  geom_histogram(alpha=0.2,position="identity")
+```
+```{r}
+penguins %>%
+  drop_na(bill_depth_mm) %>%
+  ggplot(aes(x=bill_length_mm,fill=species)) +
+  geom_histogram(alpha=0.2,position="identity")
+```
+```{r}
+penguins %>%
+  drop_na(bill_length_mm) %>%
+  ggplot(aes(x=flipper_length_mm,fill=species)) +
+  geom_histogram(alpha=0.2,position="identity")
+```
+```{r}
+penguins %>%
+  drop_na(bill_length_mm) %>%
+  ggplot(aes(x=body_mass_g,fill=species)) +
+  geom_histogram(alpha=0.2,position="identity")
+```
+```{r}
+penguins%>%
+  drop_na(bill_length_mm)%>%
+  ggplot(aes(x=bill_length_mm,fill=species)) +
+  geom_density(alpha=0.2,position="identity")
+
+```
+```{r}
+penguins%>%
+  drop_na(bill_depth_mm)%>%
+  ggplot(aes(x=bill_depth_mm,fill=species)) +
+  geom_density(alpha=0.2,position="identity")
+```
+```{r}
+penguins%>%
+  drop_na(flipper_length_mm)%>%
+  ggplot(aes(x=flipper_length_mm,fill=species)) +
+  geom_density(alpha=0.2,position="identity")
+```
+```{r}
+penguins%>%
+  drop_na(body_mass_g)%>%
+  ggplot(aes(x=body_mass_g,fill=species)) +
+  geom_density(alpha=0.2,position="identity")
+```
+```{r}
+penguins %>%
+  drop_na(bill_length_mm) %>%
+  ggplot(aes(y=bill_length_mm,x=species)) +
+  geom_violin()
+```
+```{r}
+penguins %>%
+  drop_na(bill_depth_mm) %>%
+  ggplot(aes(y=bill_depth_mm,x=species)) +
+  geom_violin()
+```
+```{r}
+penguins %>%
+  drop_na(flipper_length_mm) %>%
+  ggplot(aes(y=flipper_length_mm,x=species)) +
+  geom_violin()
+```
+```{r}
+penguins %>%
+  drop_na(body_mass_g) %>%
+  ggplot(aes(y=body_mass_g,x=species)) +
+  geom_violin()
+```
+```{r}
+penguins %>%
+  drop_na(bill_length_mm) %>%
+  ggplot(aes(y=bill_length_mm,x=species)) +
+  geom_boxplot()
+```
+```{r}
+penguins %>%
+  drop_na(bill_depth_mm) %>%
+  ggplot(aes(y=bill_depth_mm,x=species)) +
+  geom_boxplot()
+```
+```{r}
+penguins %>%
+  drop_na(flipper_length_mm) %>%
+  ggplot(aes(y=flipper_length_mm,x=species)) +
+  geom_boxplot()
+```
+```{r}
+penguins %>%
+  drop_na(body_mass_g) %>%
+  ggplot(aes(y=body_mass_g,x=species)) +
+  geom_boxplot()
+```
+```{r}
+penguins %>%
+  count(species,island) %>%
+  pivot_wider(names_from=species,values_from=n,values_fill=0)
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
